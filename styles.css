@@ -66,18 +66,61 @@ header h1 {
     box-shadow: 0 0 10px rgba(21, 152, 149, 0.2);
 }
 
-.category-filter select {
+.category-selection {
     width: 100%;
-    padding: 12px 18px;
-    border: 2px solid var(--secondary-color);
-    border-radius: 25px;
+}
+
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.category-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    border-radius: 12px;
     background-color: white;
-    font-size: 1rem;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M1 4l5 5 5-5' fill='none' stroke='%23159895' stroke-width='2'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 18px center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    cursor: pointer;
     transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.category-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+.category-item.selected {
+    border-color: var(--secondary-color);
+    background-color: #f0f8ff;
+}
+
+.category-item i {
+    font-size: 2rem;
+    color: var(--secondary-color);
+    margin-bottom: 10px;
+}
+
+.category-item span {
+    font-size: 0.9rem;
+    text-align: center;
+    font-weight: 500;
+}
+
+.selected-category-name {
+    text-align: center;
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    font-weight: 600;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
 .business-grid {
@@ -139,7 +182,20 @@ header h1 {
     text-decoration: underline;
 }
 
-@media screen and (max-width: 480px) {
+.no-results {
+    text-align: center;
+    color: var(--primary-color);
+    padding: 20px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+@media screen and (max-width: 600px) {
+    .category-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
     .container {
         padding: 15px;
     }
@@ -148,8 +204,7 @@ header h1 {
         font-size: 1.6rem;
     }
     
-    .controls input,
-    .controls select {
+    .controls input {
         font-size: 0.95rem;
         padding: 10px 15px;
     }

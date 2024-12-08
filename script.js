@@ -16,14 +16,15 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error('Error fetching business data:', error);
             businessList.innerHTML = `
-                <p style="color: red; text-align: center;">
-                    डेटा लोड करण्यात त्रुटी आली: ${error.message}
-                </p>`;
+                <div class="error-message">
+                    <p>डेटा लोड करण्यात त्रुटी आली: ${error.message}</p>
+                </div>`;
         }
     }
 
     // Populate category dropdown
     function populateCategories(categories) {
+        categoryDropdown.innerHTML = '<option value="">सर्व श्रेण्या</option>';
         categories.forEach(category => {
             const option = document.createElement('option');
             option.value = category.id;
@@ -47,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         if (filteredBusinesses.length === 0) {
-            businessList.innerHTML = '<p>कोणतेही व्यवसाय सापडले नाहीत.</p>';
+            businessList.innerHTML = '<div class="no-results"><p>कोणतेही व्यवसाय सापडले नाहीत.</p></div>';
             return;
         }
 
@@ -61,22 +62,33 @@ document.addEventListener('DOMContentLoaded', () => {
         // Render businesses grouped by category
         for (const categoryId in groupedBusinesses) {
             const category = businessData.categories.find(cat => cat.id === categoryId);
-            const categoryHeader = document.createElement('h3');
+            
+            // Category header
+            const categoryHeader = document.createElement('div');
             categoryHeader.classList.add('category-header');
             categoryHeader.innerHTML = `<i class="${category.icon}"></i> ${category.name}`;
             businessList.appendChild(categoryHeader);
 
+            // Business cards for this category
             groupedBusinesses[categoryId].forEach(business => {
                 const businessCard = document.createElement('div');
                 businessCard.classList.add('business-card');
                 businessCard.innerHTML = `
                     <h4>${business.shopName}</h4>
-                    <p>मालक: ${business.ownerName}</p>
-                    <p>संपर्क: <a href="tel:${business.contactNumber}">${business.contactNumber}</a></p>
+                    <p><strong>मालक:</strong> ${business.ownerName}</p>
+                    <p><strong>संपर्क:</strong> <a href="tel:${business.contactNumber}">${formatPhoneNumber(business.contactNumber)}</a></p>
                 `;
                 businessList.appendChild(businessCard);
             });
         }
+    }
+
+    // Format phone number for better readability
+    function formatPhoneNumber(phoneNumber) {
+        if (phoneNumber.length === 10) {
+            return `${phoneNumber.slice(0, 4)} ${phoneNumber.slice(4, 7)} ${phoneNumber.slice(7)}`;
+        }
+        return phoneNumber;
     }
 
     // Handle search

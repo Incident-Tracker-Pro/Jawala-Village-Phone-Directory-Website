@@ -1,8 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
     const businessList = document.getElementById('businessList');
     const searchInput = document.getElementById('searchInput');
-    const categoryDropdown = document.getElementById('categoryDropdown');
+    const categoryGrid = document.getElementById('categoryGrid');
+    const selectedCategoryName = document.getElementById('selectedCategoryName');
     let businessData = null;
+    let selectedCategory = null;
 
     // Fetch business data
     async function fetchBusinessData() {
@@ -11,34 +13,88 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             businessData = await response.json();
 
-            populateCategories(businessData.categories);
+            renderCategoryGrid(businessData.categories);
             renderBusinesses(businessData.businesses);
         } catch (error) {
             console.error('Error fetching business data:', error);
             businessList.innerHTML = `
-                <div class="error-message">
+                <div class="no-results">
                     <p>डेटा लोड करण्यात त्रुटी आली: ${error.message}</p>
                 </div>`;
         }
     }
 
-    // Populate category dropdown
-    function populateCategories(categories) {
-        categoryDropdown.innerHTML = '<option value="">सर्व श्रेण्या</option>';
+    // Render category grid
+    function renderCategoryGrid(categories) {
+        categoryGrid.innerHTML = '';
         categories.forEach(category => {
-            const option = document.createElement('option');
-            option.value = category.id;
-            option.textContent = category.name;
-            categoryDropdown.appendChild(option);
+            const categoryItem = document.createElement('div');
+            categoryItem.classList.add('category-item');
+            categoryItem.innerHTML = `
+                <i class="${category.icon}"></i>
+                <span>${category.name}</span>
+            `;
+            
+            categoryItem.addEventListener('click', () => {
+                // Remove selected class from all items
+                document.querySelectorAll('.category-item').forEach(item => 
+                    item.classList.remove('selected')
+                );
+                
+                // Add selected class to clicked item
+                categoryItem.classList.add('selected');
+                
+                // Update selected category
+                selectedCategory = category.id;
+                
+                // Update category name display
+                selectedCategoryName.textContent = category.name;
+                selectedCategoryName.style.opacity = '1';
+                
+                // Filter and render businesses
+                filterBusinesses();
+            });
+            
+            categoryGrid.appendChild(categoryItem);
         });
+
+        // Add "All Categories" option
+        const allCategoriesItem = document.createElement('div');
+        allCategoriesItem.classList.add('category-item');
+        allCategoriesItem.innerHTML = `
+            <i class="fas fa-th-large"></i>
+            <span>सर्व श्रेण्या</span>
+        `;
+        
+        allCategoriesItem.addEventListener('click', () => {
+            // Remove selected class from all items
+            document.querySelectorAll('.category-item').forEach(item => 
+                item.classList.remove('selected')
+            );
+            
+            // Add selected class to all categories item
+            allCategoriesItem.classList.add('selected');
+            
+            // Clear selected category
+            selectedCategory = null;
+            
+            // Clear category name display
+            selectedCategoryName.textContent = '';
+            selectedCategoryName.style.opacity = '0';
+            
+            // Filter and render businesses
+            filterBusinesses();
+        });
+        
+        categoryGrid.appendChild(allCategoriesItem);
     }
 
-    // Render businesses
-    function renderBusinesses(businesses, selectedCategory = null, searchTerm = null) {
-        businessList.innerHTML = ''; // Clear previous content
-
+    // Filter and render businesses
+    function filterBusinesses() {
+        const searchTerm = searchInput.value.trim();
+        
         // Filter businesses
-        const filteredBusinesses = businesses.filter(business => {
+        const filteredBusinesses = businessData.businesses.filter(business => {
             const matchesCategory = !selectedCategory || business.category === selectedCategory;
             const matchesSearch = !searchTerm ||
                 Object.values(business).some(value =>
@@ -47,13 +103,21 @@ document.addEventListener('DOMContentLoaded', () => {
             return matchesCategory && matchesSearch;
         });
 
-        if (filteredBusinesses.length === 0) {
+        // Render filtered businesses
+        renderBusinesses(filteredBusinesses);
+    }
+
+    // Render businesses
+    function renderBusinesses(businesses) {
+        businessList.innerHTML = ''; // Clear previous content
+
+        if (businesses.length === 0) {
             businessList.innerHTML = '<div class="no-results"><p>कोणतेही व्यवसाय सापडले नाहीत.</p></div>';
             return;
         }
 
         // Group businesses by category
-        const groupedBusinesses = filteredBusinesses.reduce((acc, business) => {
+        const groupedBusinesses = businesses.reduce((acc, business) => {
             if (!acc[business.category]) acc[business.category] = [];
             acc[business.category].push(business);
             return acc;
@@ -91,19 +155,8 @@ document.addEventListener('DOMContentLoaded', () => {
         return phoneNumber;
     }
 
-    // Handle search
-    searchInput.addEventListener('input', (e) => {
-        const searchTerm = e.target.value.trim();
-        const selectedCategory = categoryDropdown.value || null;
-        renderBusinesses(businessData.businesses, selectedCategory, searchTerm);
-    });
-
-    // Handle category selection
-    categoryDropdown.addEventListener('change', (e) => {
-        const selectedCategory = e.target.value || null;
-        const searchTerm = searchInput.value.trim();
-        renderBusinesses(businessData.businesses, selectedCategory, searchTerm);
-    });
+    // Handle search input
+    searchInput.addEventListener('input', filterBusinesses);
 
     // Initialize app
     fetchBusinessData();

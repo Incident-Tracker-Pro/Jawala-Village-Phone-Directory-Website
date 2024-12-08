@@ -5,6 +5,8 @@
     --text-color: #2c3e50;
     --card-background: #ffffff;
     --accent-color: #57c5b6;
+    --border-radius: 12px;
+    --box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
 * {
@@ -22,7 +24,7 @@ body {
 
 .container {
     width: 100%;
-    max-width: 700px;
+    max-width: 800px;
     margin: 0 auto;
     padding: 20px;
 }
@@ -31,31 +33,31 @@ header {
     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
     color: white;
     text-align: center;
-    padding: 25px;
-    border-radius: 12px;
-    margin-bottom: 25px;
-    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+    padding: 30px;
+    border-radius: var(--border-radius);
+    margin-bottom: 30px;
+    box-shadow: var(--box-shadow);
 }
 
 header h1 {
-    font-size: 2rem;
-    font-weight: 600;
-    letter-spacing: 0.5px;
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: 1px;
 }
 
 .controls {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    margin-bottom: 25px;
+    gap: 25px;
+    margin-bottom: 30px;
 }
 
 .search-container input {
     width: 100%;
-    padding: 12px 18px;
+    padding: 15px 20px;
     border: 2px solid var(--secondary-color);
     border-radius: 25px;
-    font-size: 1rem;
+    font-size: 1.1rem;
     background-color: white;
     transition: all 0.3s ease;
     outline: none;
@@ -72,9 +74,9 @@ header h1 {
 
 .category-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
-    margin-bottom: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
 }
 
 .category-item {
@@ -82,10 +84,10 @@ header h1 {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 15px;
-    border-radius: 12px;
+    padding: 20px;
+    border-radius: var(--border-radius);
     background-color: white;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    box-shadow: var(--box-shadow);
     cursor: pointer;
     transition: all 0.3s ease;
     border: 2px solid transparent;
@@ -102,23 +104,23 @@ header h1 {
 }
 
 .category-item i {
-    font-size: 2rem;
+    font-size: 2.5rem;
     color: var(--secondary-color);
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .category-item span {
-    font-size: 0.9rem;
+    font-size: 1rem;
     text-align: center;
-    font-weight: 500;
+    font-weight: 600;
 }
 
 .selected-category-name {
     text-align: center;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     color: var(--primary-color);
-    margin-bottom: 15px;
-    font-weight: 600;
+    margin-bottom: 20px;
+    font-weight: 700;
     opacity: 0;
     transition: opacity 0.3s ease;
 }
@@ -126,30 +128,30 @@ header h1 {
 .business-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 25px;
 }
 
 .category-header {
     display: flex;
     align-items: center;
     gap: 15px;
-    font-size: 1.4rem;
+    font-size: 1.6rem;
     color: var(--primary-color);
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     border-bottom: 2px solid var(--accent-color);
-    padding-bottom: 10px;
+    padding-bottom: 15px;
 }
 
 .category-header i {
     color: var(--secondary-color);
-    font-size: 1.8rem;
+    font-size: 2rem;
 }
 
 .business-card {
     background-color: var(--card-background);
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    border-radius: var(--border-radius);
+    padding: 25px;
+    box-shadow: var(--box-shadow);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -159,21 +161,21 @@ header h1 {
 }
 
 .business-card h4 {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     color: var(--primary-color);
-    margin-bottom: 10px;
-    font-weight: 600;
+    margin-bottom: 15px;
+    font-weight: 700;
 }
 
 .business-card p {
-    margin: 8px 0;
+    margin: 10px 0;
     color: var(--text-color);
 }
 
 .business-card a {
     color: var(--secondary-color);
     text-decoration: none;
-    font-weight: 500;
+    font-weight: 600;
     transition: color 0.3s ease;
 }
 
@@ -185,27 +187,27 @@ header h1 {
 .no-results {
     text-align: center;
     color: var(--primary-color);
-    padding: 20px;
+    padding: 25px;
     background-color: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
 }
 
 @media screen and (max-width: 600px) {
     .category-grid {
         grid-template-columns: repeat(2, 1fr);
     }
-    
+
     .container {
         padding: 15px;
     }
-    
+
     header h1 {
-        font-size: 1.6rem;
+        font-size: 2rem;
     }
-    
+
     .controls input {
-        font-size: 0.95rem;
-        padding: 10px 15px;
+        font-size: 1rem;
+        padding: 12px 18px;
     }
 }
